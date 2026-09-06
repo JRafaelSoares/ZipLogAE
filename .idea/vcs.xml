@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/HdrHistogram_c" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/HdrHistogram_c/test/vendor/google/benchmark" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/cxxopts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/jemalloc" vcs="Git" />
+  </component>
+</project>

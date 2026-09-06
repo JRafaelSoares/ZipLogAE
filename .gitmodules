@@ -1,0 +1,9 @@
+[submodule "deps/HdrHistogram_c"]
+	path = deps/HdrHistogram_c
+	url = https://github.com/HdrHistogram/HdrHistogram_c
+[submodule "deps/cxxopts"]
+	path = deps/cxxopts
+	url = https://github.com/jarro2783/cxxopts
+[submodule "deps/jemalloc"]
+	path = deps/jemalloc
+	url = https://github.com/jemalloc/jemalloc/
