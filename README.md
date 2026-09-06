@@ -10,6 +10,9 @@ Yu-Ju Huang<sup>1</sup>, Shubham Chaudhary<sup>1</sup>, Rafael Soares<sup>2</sup
 <sup>1</sup> Cornell University
 <sup>2</sup> INESC-ID, Instituto Superior Técnico, Universidade de Lisboa
 
+#  Note
+This git repository holds alongside it two other branches, containing the implementation of ZipKVS (`zipkvs` branch) and the Retwis client used to benchmark ZipKVS (`retwis` branch).
+
 ## Requirements
 
 Before building or running ZipLog, make sure you have:
