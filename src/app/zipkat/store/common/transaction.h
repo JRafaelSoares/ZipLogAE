@@ -1,0 +1,99 @@
+// -*- mode: c++; c-file-style: "k&r"; c-basic-offset: 4 -*-
+/***********************************************************************
+ *
+ * common/transaction.h:
+ *   A Transaction representation.
+ *
+ **********************************************************************/
+
+#ifndef _TRANSACTION_H_
+#define _TRANSACTION_H_
+
+#include "lib/assert.h"
+#include "lib/message.h"
+#include "store/common/timestamp.h"
+
+#include <set>
+#include <map>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+
+// Reply types
+#define REPLY_OK 0
+#define REPLY_FAIL 1
+#define REPLY_RETRY 2
+#define REPLY_ABSTAIN 3
+#define REPLY_TIMEOUT 4
+#define REPLY_NETWORK_FAILURE 5
+#define REPLY_MAX 6
+
+// <clientd, clienttxn_nr>
+typedef std::pair<uint64_t, uint64_t> txnid_t;
+
+// Statuses maintained in the TransactionSet,
+// by the replication layer
+enum TransactionStatus {
+    NOT_PREPARED,
+    PREPARED_WRITES,
+    PREPARED_RETRY,
+    PREPARED_OK,
+    PREPARED_ABORT,
+    COMMITTED,
+    ABORTED
+};
+
+// transations are serialized to a buffer containing arrays
+// of these structures:
+struct read_t {
+    uint64_t timestamp;
+    char key[64];
+};
+
+struct write_t {
+    char key[64];
+    char value[64];
+};
+
+typedef std::map<std::string, Timestamp> ReadSetMap;
+typedef std::map<std::string, std::string> WriteSetMap;
+//typedef std::unordered_map<std::string, Timestamp> ReadSetMap;
+//typedef std::unordered_map<std::string, std::string> WriteSetMap;
+
+class Transaction {
+private:
+    // map between key and timestamp at
+    // which the read happened and how
+    // many times this key has been read
+    ReadSetMap readSet;
+
+    // map between key and value(s)
+    //std::unordered_map<std::string, std::string> writeSet;
+    WriteSetMap writeSet;
+
+    // all keys for doing OCC
+    std::unordered_set<std::string> allKeys;
+
+    // all key indexes that help faster conflict check
+    std::set<int> keyIndexes;
+
+public:
+    Transaction();
+    Transaction(uint8_t nr_reads, uint8_t nr_writes, char* buf);
+    ~Transaction();
+
+    const ReadSetMap& getReadSet() const;
+    const WriteSetMap& getWriteSet() const;
+    const std::unordered_set<std::string>& getAllKeys() const;
+    const std::set<int>& getKeyIndexes() const;
+
+    void addReadSet(const std::string &key, const Timestamp &readTime);
+    void addWriteSet(const std::string &key, const std::string &value);
+    void serialize(char *reqBuf) const;
+    void clear();
+    unsigned long serializedSize() const {
+        return readSet.size() * sizeof(read_t) + writeSet.size() * sizeof(write_t) + keyIndexes.size() * sizeof(int);
+    }
+};
+
+#endif /* _TRANSACTION_H_ */
