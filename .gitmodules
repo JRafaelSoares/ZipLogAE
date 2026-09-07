@@ -1,0 +1,4 @@
+[submodule "third_party/ziplog"]
+	path = third_party/ziplog
+	url = git@github.com:ziplog/ziplog.git
+	branch = new
