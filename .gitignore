@@ -1,0 +1,20 @@
+# Ignore everything by default
+*
+
+# Keep these directories and their contents
+!api/
+!api/**
+!include/
+!include/**
+!config/
+!config/**
+!impl/
+!impl/**
+!docu/
+!docu/**
+
+# Keep specific files in root
+!Makefile
+!README.md
+!dev_notes.md
+!.gitignore

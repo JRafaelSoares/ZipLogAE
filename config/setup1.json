@@ -1,0 +1,16 @@
+{
+  "f": 0,
+  "max_retries": 3,
+  "max_epoch_history": 10,
+  "epoch_duration": 150,
+  "zipper": "127.0.0.1:8000",
+  "proxies": [
+    "127.0.0.1:8001"
+  ],
+  "servers": [
+    "127.0.0.1:8010"
+  ],
+  "subscribers": [
+    "127.0.0.1:8020"
+  ]
+}
