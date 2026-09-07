@@ -1,0 +1,6 @@
+sudo modprobe rdma_rxe
+sudo rdma link add rxe0 type rxe netdev enxd0c0bf2e880e
+echo 2048 | sudo tee /proc/sys/vm/nr_hugepages
+
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++
+cmake --build build -j

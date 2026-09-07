@@ -1,0 +1,21 @@
+{
+  "order" : {
+    "addr" : ["172.16.66.85"],
+    "cpu" : 0,
+    "port" : 31850
+  },
+  "storage": {
+    "addr" : ["172.16.66.87", "172.16.66.88"],
+    "port" : 31860,
+    "client_cpus" : [0],
+    "subscriber_cpus" : [],
+    "timeout" : 0
+  },
+  "client": {
+    "addr" : ["172.16.66.91"],
+    "port" : 31860,
+    "bench_cpu" : [0],
+    "client_cpu" : [1]
+  },
+  "failures" : 1
+}
