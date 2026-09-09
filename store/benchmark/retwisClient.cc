@@ -135,7 +135,6 @@ void client_fiber_func(int thread_id, std::shared_ptr<zip::client::client> ziplo
 
         // Decide which type of retwis transaction it is going to be.
         ttype = rand() % 100;
-        std::cout << "Starting Transactions" << std::endl;
         if (ttype < 5) {
             // 5% - Add user transaction. 1,3
             keyIdx.push_back(rand_key());
