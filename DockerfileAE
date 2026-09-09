@@ -1,0 +1,75 @@
+FROM ubuntu:24.04
+LABEL authors="jrsoares"
+
+RUN apt-get update
+RUN apt-get install -y  \
+      cmake \
+      clang-16 \
+      build-essential \
+      git \
+      autoconf \
+      libibverbs-dev \
+      ibverbs-providers \
+      ibverbs-utils \
+      rdma-core \
+      libnuma-dev \
+      zlib1g-dev \
+    libboost-dev \
+    libboost-fiber-dev \
+    libboost-context-dev \
+    libboost-thread-dev \
+    libboost-system-dev \
+    cmake \
+    libgtest-dev \
+    curl
+
+WORKDIR /src
+
+RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-16 100
+
+
+WORKDIR /src
+
+# rdma
+RUN git clone https://github.com/JRafaelSoares/ZipLogAE rdma
+WORKDIR /src/rdma
+RUN git checkout rdma
+RUN make deps && make -j
+
+WORKDIR /src
+
+# zipkvs
+RUN git clone https://github.com/JRafaelSoares/ZipLogAE zipkvs
+WORKDIR /src/zipkvs
+RUN git checkout zipkvs
+RUN make deps && make -j
+
+WORKDIR /src
+
+# retwis
+RUN git clone https://github.com/JRafaelSoares/ZipLogAE retwis
+WORKDIR /src/retwis
+RUN git checkout retwis
+RUN ln -sfn /src/zipkvs third_party/ziplog
+
+WORKDIR /src
+
+# tcp
+RUN git clone https://github.com/JRafaelSoares/ZipLogAE tcp
+WORKDIR /src/tcp
+RUN git checkout tcp
+RUN make
+
+WORKDIR /src
+
+# ziperpc
+RUN git clone https://github.com/JRafaelSoares/ZipLogAE ziperpc
+WORKDIR /src/ziperpc
+RUN git checkout ziperpc
+RUN git submodule update --init --recursive
+RUN ./build_erpc.sh
+RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++
+RUN cmake --build build -j
+
+
+WORKDIR /src

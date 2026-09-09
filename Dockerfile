@@ -20,7 +20,8 @@ RUN apt-get install -y  \
     libboost-thread-dev \
     libboost-system-dev \
     cmake \
-    libgtest-dev
+    libgtest-dev \
+    curl
 
 WORKDIR /src
 
