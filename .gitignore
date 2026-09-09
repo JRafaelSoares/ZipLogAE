@@ -12,7 +12,7 @@
 !impl/**
 !docu/
 !docu/**
-
+!benchmark-local.sh
 # Keep specific files in root
 !Makefile
 !README.md
