@@ -7,3 +7,6 @@
 [submodule "deps/jemalloc"]
 	path = deps/jemalloc
 	url = https://github.com/jemalloc/jemalloc/
+[submodule "deps/eRPC"]
+	path = deps/eRPC
+	url = https://github.com/erpc-io/eRPC.git
