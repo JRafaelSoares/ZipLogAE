@@ -78,6 +78,9 @@ log_(num_iterators), iterators_(num_iterators, log_), num_threads_(cpus.size()) 
 
 
 subscriber::~subscriber() {
+    // signal the processing threads to stop
+    stop_.store(true, std::memory_order_relaxed);
+
     // send a finished message to the storage servers
     for (auto& [_, replicas]: server_queues_) {
         for (auto& [_, queues]: replicas) {
@@ -132,7 +135,7 @@ void subscriber::loop(uint32_t index, std::set<std::string> servers) {
 
     // keep processing in a loop until shutdown
     bool end = false;
-    while (!end) {
+    while (!end && !stop_.load(std::memory_order_relaxed)) {
         // spin loop optimization
         zip::util::relax();
 

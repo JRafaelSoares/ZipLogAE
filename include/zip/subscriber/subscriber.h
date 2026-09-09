@@ -92,6 +92,9 @@ private:
     /** signal to start the processing thread */
     std::atomic<bool> start_ = false;
 
+    /** signal to stop the processing threads */
+    std::atomic<bool> stop_ = false;
+
     /** log for this subscriber */
     log log_;
 

@@ -275,6 +275,8 @@ void producer_thread(zip::network::manager& manager,
 
         // spin loop optimization
     }
+    client.stop();
+
     auto duration = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
 
     {
