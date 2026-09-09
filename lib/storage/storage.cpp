@@ -228,6 +228,12 @@ void storage::control() {
         // send the finished message to the ordering server
         if (!stopped && (stopped = stop_.load(std::memory_order_relaxed))) {
             order_->send(&finished_, finished_.length());
+
+            // don't block shutdown on an order_finished reply: the ordering
+            // server may already be shutting down itself and never send one,
+            // which would otherwise hang this thread (and the process) forever
+            end = true;
+            break;
         }
 
         // poll the receive queue for a packet
@@ -274,18 +280,6 @@ void storage::control() {
                     it->second->send(&finished_, finished_.length());
                     subscriber_queues_[index].erase(it);
                 }
-            },
-            [&] ([[maybe_unused]] zip::api::order_finished& bye) {
-                // verify that the order connection still exists
-                if (!order_) {
-                    logger.warn("Failed to disconnect with ordering server as it does not exist");
-                    return;
-                }
-
-                // mark the order connection as finalized
-                logger.info("Ended connection with ordering server");
-                order_.reset();
-                end = true;
             }
         );
     }
