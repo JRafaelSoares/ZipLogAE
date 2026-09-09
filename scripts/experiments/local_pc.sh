@@ -36,12 +36,12 @@ cleanup() {
   # Stop storage before order, as documented, and let each shut down
   # gracefully (SIGINT) rather than killing them outright.
   for pid in "$STORAGE0_PID" "$STORAGE1_PID"; do
-    [[ -n "$pid" ]] && kill -INT "$pid" 2>/dev/null || true
+    [[ -n "$pid" ]] && kill "$pid" 2>/dev/null || true
   done
   for pid in "$STORAGE0_PID" "$STORAGE1_PID"; do
     [[ -n "$pid" ]] && wait "$pid" 2>/dev/null || true
   done
-  [[ -n "$ORDER_PID" ]] && kill -INT "$ORDER_PID" 2>/dev/null || true
+  [[ -n "$ORDER_PID" ]] && kill "$ORDER_PID" 2>/dev/null || true
   [[ -n "$ORDER_PID" ]] && wait "$ORDER_PID" 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
