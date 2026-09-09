@@ -11,7 +11,15 @@ Yu-Ju Huang<sup>1</sup>, Shubham Chaudhary<sup>1</sup>, Rafael Soares<sup>2</sup
 <sup>2</sup> INESC-ID, Instituto Superior Técnico, Universidade de Lisboa
 
 #  Note
-This git repository holds alongside it two other branches, containing the implementation of ZipKVS (`zipkvs` branch) and the Retwis client used to benchmark ZipKVS (`retwis` branch).
+This git repository holds alongside it four other branches, containing:
+* The implementation of ZipKVS (`zipkvs` branch) and the Retwis client used to benchmark ZipKVS (`retwis` branch).
+* The eRPC version of Ziplog (`ziperpc`) used to evaluate against LazyLog;
+* The TCP version of Ziplog (`tcp`) used to evaluate against SpecLog
+
+## Artifact Evaluation
+
+For the artifact evaluation, we have prepared a special Dockerfile containing all branches already compiled and scripts containing local deployments of microbenchmarks to demonstrate functionality.
+You can find these instructions in **[docs/ArtifactEvaluation.md](docs/ArtifactEvaluation.md)**
 
 ## Requirements
 

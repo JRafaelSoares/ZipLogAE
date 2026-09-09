@@ -93,7 +93,7 @@ void start_subscriber(cxxopts::ParseResult& options) {
             old_entries[i] = num_entries[i];
             old_ends[i] = end[i];
         }
-        logger.info("Throughput: ", throughput);
+        //logger.info("Throughput: ", throughput);
     }
     subscriber.stop();
 

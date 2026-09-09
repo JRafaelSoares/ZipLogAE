@@ -5,6 +5,7 @@ RUN apt-get update
 RUN apt-get install -y  \
       cmake \
       clang-16 \
+      clang-14 \
       build-essential \
       git \
       autoconf \
@@ -21,7 +22,11 @@ RUN apt-get install -y  \
     libboost-system-dev \
     cmake \
     libgtest-dev \
-    curl
+    curl \
+    pkg-config \
+    libevent-dev \
+    libssl-dev \
+    libgflags-dev
 
 WORKDIR /src
 
@@ -34,6 +39,7 @@ WORKDIR /src
 RUN git clone https://github.com/JRafaelSoares/ZipLogAE rdma
 WORKDIR /src/rdma
 RUN git checkout rdma
+RUN git submodule update --init --recursive
 RUN make deps && make -j
 
 WORKDIR /src
@@ -42,6 +48,7 @@ WORKDIR /src
 RUN git clone https://github.com/JRafaelSoares/ZipLogAE zipkvs
 WORKDIR /src/zipkvs
 RUN git checkout zipkvs
+RUN git submodule update --init --recursive
 RUN make deps && make -j
 
 WORKDIR /src
@@ -51,14 +58,16 @@ RUN git clone https://github.com/JRafaelSoares/ZipLogAE retwis
 WORKDIR /src/retwis
 RUN git checkout retwis
 RUN ln -sfn /src/zipkvs third_party/ziplog
-
+RUN python3 store/tools/key_generator.py 1000 > /src/keys
+RUN ./build_erpc.sh
+RUN make -j
 WORKDIR /src
 
 # tcp
 RUN git clone https://github.com/JRafaelSoares/ZipLogAE tcp
 WORKDIR /src/tcp
 RUN git checkout tcp
-RUN make
+RUN make -j
 
 WORKDIR /src
 
