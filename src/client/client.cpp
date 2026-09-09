@@ -255,6 +255,7 @@ void client::loop() {
     nop.client_id = client_id_;
     nop.data_length = 0;
     nop.global_client_id = 8888;
+    nop.gsn_after = -1;
 
     // create a message for sending an end request
     zip::api::client_finished finished;

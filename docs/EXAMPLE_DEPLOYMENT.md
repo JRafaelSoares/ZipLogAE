@@ -24,7 +24,9 @@ Then start two storage replicas for shard 0, each with its own client-facing CPU
   --server=7777 \
   --shard_id=0 \
   --num_keys=1000000
+```
 
+```bash
 ./build/storage \
   --device=mlx5_0 --gid=1 \
   --client_cpus=2 \

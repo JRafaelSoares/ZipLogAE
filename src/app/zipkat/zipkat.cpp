@@ -7,7 +7,7 @@ namespace app {
 namespace zipkat {
 
 // TODO: refine
-static const std::string kKeysFile = "/home/yh885/zipkat/keys";
+static const std::string kKeysFile = "/src/keys";
 
 Zipkat::Zipkat(uint64_t num_keys)
     : kvs_(std::make_unique<PthreadKvs>()),
