@@ -16,7 +16,7 @@ This example assumes a single machine with 8 CPU cores (0–7) and one RDMA devi
 Start the ordering server (CPU 0):
 
 ```bash
-./build/out/bin/order --cpu=0
+./build/out/bin/order --cpu=0 --port 31850
 ```
 
 This binds to `127.0.0.1:6666` by default — that's the address every other process below points at via `--order`.
@@ -26,17 +26,19 @@ Then start two storage replicas for shard 0, each with its own client-facing and
 ```bash
 ./build/out/bin/storage \
   --client_cpus=1 \
-  --order=127.0.0.1:6666 \
-  --port=31850 \
+  --order=127.0.0.1:31850 \
+  --port=31851 \
   --replica_id=0 \
   --shard_id=0 \
   --subscriber_cpus=2 \
   --timeout=100000
+```
 
+```bash
 ./build/out/bin/storage \
   --client_cpus=3 \
-  --order=127.0.0.1:6666 \
-  --port=31851 \
+  --order=127.0.0.1:31850 \
+  --port=31852 \
   --replica_id=1 \
   --shard_id=0 \
   --subscriber_cpus=4 \
@@ -55,9 +57,9 @@ Run the append benchmark client for 10 seconds (CPUs 5–6):
   --client_cpu=5 \
   --client_id=0 \
   --duration=10 \
-  --order=127.0.0.1:6666 \
-  --port=31852 \
-  --servers=127.0.0.1:31850,127.0.0.1:31851 \
+  --order=127.0.0.1:31850 \
+  --port=31853 \
+  --servers=127.0.0.1:31851,127.0.0.1:31852 \
   --shard_id=0
 ```
 
@@ -72,11 +74,11 @@ As an alternative to the append benchmark above (on the same shared `order`/`sto
   --client_cpu=5 \
   --client_id=0 \
   --duration=10 \
-  --order=127.0.0.1:6666 \
-  --port=31852 \
-  --servers=127.0.0.1:31850,127.0.0.1:31851 \
+  --order=127.0.0.1:31850 \
+  --port=31853 \
+  --servers=127.0.0.1:31851,127.0.0.1:31852 \
   --shard_id=0 \
-  --subscriber_cpus=6,7 \
+  --subscriber_cpus=6 \
   --subscriber_id=0
 ```
 

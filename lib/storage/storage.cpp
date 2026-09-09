@@ -166,7 +166,7 @@ subscriber_threads_(subscriber_cpus.size()), timeout_(timeout) {
                 [&] (zip::api::subscriber_intro& intro) {
                     // make sure the subscriber being added is valid
                     if (num_clients > 0 || subscribers.contains(intro.subscriber_id)) {
-                        logger.warn("Could not add subscriber (", intro.subscriber_id, ")");
+                        logger.warn("Could not add subscriber (", intro.subscriber_id, "): ", num_clients, " clients and :", subscribers.contains(intro.subscriber_id) );
                         return;
                     }
 
