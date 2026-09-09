@@ -95,6 +95,9 @@ void client_fiber_func(int thread_id, std::shared_ptr<zip::client::client> ziplo
     auto client = std::make_unique<meerkatstore::meerkatir::Client>(
                                         FLAGS_numServerThreads, FLAGS_numShards,
                                         global_thread_id, ziplogClient, *manager);
+
+    std::cout << "Made Meerkatstore Client" << std::endl;
+
     struct timeval t0, t1, t2;
 
     uint64_t nTransactions = 0;
@@ -132,7 +135,7 @@ void client_fiber_func(int thread_id, std::shared_ptr<zip::client::client> ziplo
 
         // Decide which type of retwis transaction it is going to be.
         ttype = rand() % 100;
-
+        std::cout << "Starting Transactions" << std::endl;
         if (ttype < 5) {
             // 5% - Add user transaction. 1,3
             keyIdx.push_back(rand_key());
@@ -150,6 +153,7 @@ void client_fiber_func(int thread_id, std::shared_ptr<zip::client::client> ziplo
                 int idx = keyIdx[i];
                 client->Put(keys[idx], idx, v);
             }
+
             ttype = 1;
         } else if (ttype < 20) {
             // 15% - Follow/Unfollow transaction. 2,2
@@ -225,12 +229,10 @@ void client_fiber_func(int thread_id, std::shared_ptr<zip::client::client> ziplo
 
         if (status) {
             status = client->Commit(boost::this_fiber::yield);
+
         }
         gettimeofday(&t2, NULL);
-        //fprintf(fp, "Done commit\n");
 
-        //commitCount++;
-        //commitLatency += ((t2.tv_sec - t3.tv_sec)*1000000 + (t2.tv_usec - t3.tv_usec));
 
         // log only the transactions that finished in the interval we actually measure
         if ((t2.tv_sec >= FLAGS_secondsFromEpoch + FLAGS_warmup) &&
@@ -243,48 +245,19 @@ void client_fiber_func(int thread_id, std::shared_ptr<zip::client::client> ziplo
                 tCount++;
                 tLatency += latency;
             }
-            //printf("client-%d, %lu %ld.%06ld %ld.%06ld %ld %d\n", global_thread_id, nTransactions, t1.tv_sec,
-            //        t1.tv_usec, t2.tv_sec, t2.tv_usec, latency, status?1:0);
-/*
-            if (nTransactions > results.size())
-                results.emplace_back(measurement{nTransactions, t1, t2, status});
-            else
-                results[nTransactions] = measurement {nTransactions + 1, t1, t2, status};
-*/
-            //++nTransactions;
         }
         gettimeofday(&t1, NULL);
         if (((t1.tv_sec-t0.tv_sec)*1000000 + (t1.tv_usec-t0.tv_usec)) > FLAGS_duration*1000000) {
             break;
         }
     }
-  
-/*
-    std::cout << "start writing to log file\n";
-    for (auto& r : results) {
-        if (r.nTransaction == 0) {
-            // Skip the pre-filled elements   
-            break;
-        }
-        const auto latency = (r.end.tv_sec - r.start.tv_sec)*1000000 + (r.end.tv_usec - r.start.tv_usec);
-        fprintf(fp, "%d %ld.%06ld %ld.%06ld %ld %d\n",
-            r.nTransaction, r.start.tv_sec, r.start.tv_usec, r.end.tv_sec, r.end.tv_usec, latency, r.status?1:0);
 
-        if (r.status) {
-            tCount++;
-            tLatency += latency;
-        }
-    }
-    std::cout << "Write to log file done\n";
-*/
 
     for (auto line : results) {
         fprintf(fp, "%s", line.c_str());
     }
     fprintf(fp, "# Commit_Ratio: %lf\n", (double)tCount/nTransactions);
     fprintf(fp, "# Overall_Latency: %lf\n", tLatency/tCount);
-    fprintf(fp, "# Get: %d, %lf\n", getCount, getLatency/getCount);
-    fprintf(fp, "# Commit: %d, %lf\n", commitCount, commitLatency/commitCount);
     fclose(fp);
     std::cout << "RetwisClient client-" << global_thread_id << " done\n";
 }
@@ -369,7 +342,7 @@ int main(int argc, char **argv) {
         } else {
 */
             printf("thread id=%d at %s\n", i, zip::consts::rdma::DEFAULT_DEVICE);
-            managers.emplace_back(std::make_unique<zip::network::manager>(zip::consts::rdma::DEFAULT_DEVICE, zip::consts::rdma::DEFAULT_PORT, zip::consts::rdma::DEFAULT_GID));
+            managers.emplace_back(std::make_unique<zip::network::manager>(zip::consts::rdma::DEFAULT_DEVICE, zip::consts::rdma::DEFAULT_PORT, 1));
         int ziplog_core;
         int txn_core;
 #ifdef ZIPKAT_SEPARATE_THREAD
